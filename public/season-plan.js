@@ -37,6 +37,7 @@ const text=()=>translations[language]||translations.en;
 function localTime(day,time){return new Intl.DateTimeFormat(language,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZoneName:'short'}).format(actionInstant(day,time))}
 function renderOperations(){
  const s=text(),today=seasonDay(),day=selected??today,host=document.querySelector('#captures');
+ renderSeasonBanner(today);
  if(host){const list=actions.filter(a=>a.day===day),partners=pickups.filter(p=>p[0]===day),date=new Intl.DateTimeFormat(language,{weekday:'long',month:'long',day:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(2026,8,23+day-17)));
  host.innerHTML=`<div class="season-intro"><div><div class="eyebrow">NOVA SAPPHIRE · NvSP</div><h2>${s[0]}</h2><p>${s[1]} ${day} · ${date} · ${s[18]}</p></div><span class="badge">${s[2]} · ${s[10]} ${today}</span></div><div class="season-days" role="group" aria-label="${s[1]}"><button data-season-day="today" aria-pressed="${selected===null}">${s[2]}</button>${Array.from({length:9},(_,i)=>i+17).map(d=>`<button data-season-day="${d}" aria-pressed="${selected===d}">${s[10]} ${d}</button>`).join('')}</div>${day===17||day===20?`<p class="operation-note season-unlock">${s[day===17?33:34]}</p>`:''}<div class="operation-grid">${list.length?list.map(a=>{const capture=a.kind==='capture',free=new Date(actionInstant(a.day,a.time).getTime()+3600000),freeTime=new Intl.DateTimeFormat(language,{timeZone:'UTC',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(serverDate(free));return `<article class="operation ${a.kind}"><div class="eyebrow">${s[capture?3:a.kind==='handoff'?5:4]} · ${s[6]} L${a.level}</div><h3>X${a.x} · Y${a.y}</h3><p class="action-time">${a.time} ${s[7]}<br><small>${s[8]} · ${localTime(a.day,a.time)}</small></p>${capture?`<span class="badge blue">${s[12]}</span><p>${s[13]} ${({57:'X337 Y337',97:'X587 Y412',111:'X662 Y500',58:'X337 Y412',71:'X412 Y412'})[a.dependency]} · ${s[23+['food','iron','training','construction','research'].indexOf(a.detail)]}<br>${s[14]}: ${new Intl.NumberFormat(language).format(a.level*40000)}</p>`:`<span class="badge">${s[9]} ${a.detail} · ${s[10]} ${a.dependency}</span><p>${s[11]}: ${freeTime} ${s[7]}</p>`}<small>Planbook · p. ${a.page}</small></article>`}).join(''):`<p class="operation-note">${s[15]}</p>`}</div><div class="partner-list"><strong>${s[16]}</strong>${partners.length?partners.map(p=>`<p>${p[4]} · X${p[2]} Y${p[3]} · ${p[1]?`${p[1]} ${s[7]} / ${localTime(p[0],p[1])}`:s[32]}</p>`).join(''):`<p>${s[17]}</p>`}</div><p class="operation-note">${s[20]} ${s[29]}</p><p class="operation-source">${s[19]} · ${anchor.plan}<br>${s[28]}</p>`;}
  for(const box of document.querySelectorAll('[data-upcoming]')){const next=actions.filter(a=>a.kind==='capture'&&a.day>=today).slice(0,3);box.innerHTML=`<div class="eyebrow">${s[21]}</div>${next.length?next.map(a=>`<div class="operation-summary"><small>${s[10]} ${a.day} · ${a.time} ${s[7]}</small><strong>X${a.x} · Y${a.y}</strong><span class="badge blue capture-type">${s[6]} L${a.level}</span><small>${s[8]} ${localTime(a.day,a.time)}</small></div>`).join(''):`<p class="operation-note">${s[22]}</p>`}<small class="operation-note">${s[18]}</small>`;}
@@ -45,8 +46,45 @@ function renderOperations(){
  const detail=document.querySelector('main > .preview-detail');if(detail)detail.textContent=s[30];
  const strip=document.querySelector('.preview-strip');if(strip)strip.innerHTML=`<span class="preview-pill"><span class="dot"></span>${s[0]} · ${s[10]} ${today}</span><span>${s[18]}</span>`;
 }
-export function mountSeasonPlan(lang){language=lang;if(!document.querySelector('#season-style')){const el=document.createElement('style');el.id='season-style';el.textContent=style;document.head.append(el)}renderOperations();}
+export function mountSeasonPlan(lang){language=lang;if(!document.querySelector('#season-style')){const el=document.createElement('style');el.id='season-style';el.textContent=style;document.head.append(el)}renderOperations();renderCaptureTicker();}
 if(typeof document!=='undefined'){
  document.addEventListener('click',e=>{const button=e.target.closest('[data-season-day]');if(!button)return;selected=button.dataset.seasonDay==='today'?null:Number(button.dataset.seasonDay);renderOperations();});
- let lastDay=seasonDay();setInterval(()=>{const day=seasonDay();if(day!==lastDay){lastDay=day;renderOperations();}},1000);
+ let lastDay=seasonDay();setInterval(()=>{renderCaptureTicker();const day=seasonDay();if(day!==lastDay){lastDay=day;renderOperations();}},1000);
+}
+
+export function nextCapture(now=new Date()){
+ return actions.filter(a=>a.kind==='capture'&&actionInstant(a.day,a.time)>=now).sort((a,b)=>actionInstant(a.day,a.time)-actionInstant(b.day,b.time))[0]||null;
+}
+const tickerCopy={
+ en:['Up next','Next planned capture','Pause ticker','Resume ticker'],
+ fr:['À venir','Prochaine capture prévue','Mettre en pause','Reprendre le défilement'],
+ es:['A continuación','Próxima captura prevista','Pausar el texto','Reanudar el texto'],
+ pt:['A seguir','Próxima captura prevista','Pausar texto','Retomar texto'],
+ vi:['Tiếp theo','Lần chiếm dự kiến tiếp theo','Tạm dừng chữ chạy','Tiếp tục chữ chạy'],
+ ko:['다음 일정','다음 예정 점령','자동 스크롤 일시 정지','자동 스크롤 재개'],
+ de:['Als Nächstes','Nächste geplante Eroberung','Lauftext pausieren','Lauftext fortsetzen']
+};
+let tickerPaused=false;
+const tickerStyle=`.capture-ticker{display:flex;align-items:center;gap:14px;flex:0 0 100%;width:100%;min-width:0;border-top:1px solid #28495d;padding-top:14px}.ticker-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#86f0d0;font-weight:800;flex-shrink:0}.ticker-window{overflow:hidden;min-width:0;flex:1}.ticker-track{display:flex;width:max-content;animation:capture-scroll 38s linear infinite}.ticker-item{display:flex;align-items:center;gap:16px;white-space:nowrap;padding-right:64px;color:#d7e8f4;font-size:13px;text-decoration:none}.ticker-item strong{color:#fff}.ticker-item .badge{border-radius:999px;background:#123e55;color:#91eff5;border:1px solid #27dde866;padding:4px 10px}.ticker-toggle{flex-shrink:0;background:#102c40;border:1px solid #31506a;border-radius:7px;color:#86f0d0;width:34px;height:30px;cursor:pointer}.capture-ticker:hover .ticker-track,.capture-ticker:focus-within .ticker-track,.capture-ticker.paused .ticker-track{animation-play-state:paused}.ticker-empty{margin:0;font-size:12px;color:#a8bfd1}@keyframes capture-scroll{to{transform:translateX(-50%)}}@media(prefers-reduced-motion:reduce){.ticker-track{animation:none;width:auto}.ticker-item{white-space:normal;flex-wrap:wrap;padding:0;gap:7px 12px}.ticker-item[aria-hidden]{display:none}.ticker-toggle{display:none}}@media(max-width:650px){.capture-ticker{gap:9px}.ticker-label{font-size:9px}.ticker-item{font-size:12px}}`;
+function renderCaptureTicker(){
+ const clock=document.querySelector('.world-clock');if(!clock)return;
+ if(!document.querySelector('#ticker-style')){const style=document.createElement('style');style.id='ticker-style';style.textContent=tickerStyle;document.head.append(style)}
+ let ticker=clock.querySelector('.capture-ticker');if(!ticker){ticker=document.createElement('div');ticker.className='capture-ticker';clock.append(ticker)}
+ const next=nextCapture(),s=text(),labels=tickerCopy[language],key=language+':'+(next?`${next.day}:${next.time}`:'end');
+ if(ticker.dataset.capture===key)return;ticker.dataset.capture=key;ticker.classList.toggle('paused',tickerPaused);
+ if(!next){ticker.innerHTML=`<span class="ticker-label">${labels[0]}</span><p class="ticker-empty">${s[22]}</p>`;return}
+ const message=`<strong>${labels[1]}</strong><span class="badge">${s[6]} L${next.level}</span><strong>X${next.x} · Y${next.y}</strong><span>${s[10]} ${next.day} · ${next.time} ${s[7]}</span><span>${s[8]} · ${localTime(next.day,next.time)}</span>`;
+ ticker.innerHTML=`<span class="ticker-label">${labels[0]}</span><div class="ticker-window"><div class="ticker-track"><a class="ticker-item" href="#captures">${message}</a><span class="ticker-item" aria-hidden="true">${message}</span></div></div><button class="ticker-toggle" data-ticker-pause aria-label="${labels[tickerPaused?3:2]}" aria-pressed="${tickerPaused}">${tickerPaused?'▶':'Ⅱ'}</button>`;
+}
+if(typeof document!=='undefined')document.addEventListener('click',e=>{
+ const button=e.target.closest('[data-ticker-pause]');if(!button)return;
+ tickerPaused=!tickerPaused;button.closest('.capture-ticker').classList.toggle('paused',tickerPaused);button.textContent=tickerPaused?'▶':'Ⅱ';button.setAttribute('aria-pressed',String(tickerPaused));button.setAttribute('aria-label',tickerCopy[language][tickerPaused?3:2]);
+});
+
+const seasonNames={en:['Season','Day','Evernight Isle'],fr:['Saison','Jour','Evernight Isle'],es:['Temporada','Día','Evernight Isle'],pt:['Temporada','Dia','Evernight Isle'],vi:['Mùa','Ngày','Evernight Isle'],ko:['시즌','일차','Evernight Isle'],de:['Saison','Tag','Evernight Isle']};
+function renderSeasonBanner(day){
+ const clock=document.querySelector('.world-clock');if(!clock)return;
+ if(!document.querySelector('#season-banner-style')){const style=document.createElement('style');style.id='season-banner-style';style.textContent=`.season-banner{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:16px;padding:20px 24px;border:1px solid #27dde86b;border-left:5px solid #27dde8;border-radius:12px;background:linear-gradient(115deg,#12334b,#0c2032 70%)}.season-banner-title{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}.season-banner-title strong{font-family:'Barlow Condensed',sans-serif;font-size:42px;line-height:1.05;letter-spacing:.02em;color:#f4f8fc}.season-banner-title .season-day{color:#b5dd4a}.season-banner-meta{color:#a8bfd1;font-size:12px;text-align:right;line-height:1.8}@media(max-width:650px){.season-banner{padding:17px 18px;display:block}.season-banner-title{gap:12px}.season-banner-title strong{font-size:36px}.season-banner-meta{text-align:left;margin-top:9px}}`;document.head.append(style)}
+ let banner=document.querySelector('.season-banner');if(!banner){banner=document.createElement('section');banner.className='season-banner';clock.before(banner)}
+ const names=seasonNames[language];banner.setAttribute('aria-label',`${names[0]} 4 · ${names[1]} ${day}`);banner.innerHTML=`<div class="season-banner-title"><strong>${names[0]} 4</strong><strong class="season-day">${names[1]} ${day}</strong></div><div class="season-banner-meta">${names[2]}<br>NOVA SAPPHIRE · 1616</div>`;
 }
