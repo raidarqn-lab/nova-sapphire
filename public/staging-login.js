@@ -1,3 +1,6 @@
+import {mountMemberBountyInput} from './member-bounty-input.js';
+import {bountyConnection} from './nova-bounty-config.js';
+let unmountBounty;
 import {stagingAuth as config} from './staging-auth-config.js';
 const $=s=>document.querySelector(s);
 const enabled=config.enabled && typeof config.anonKey==='string' && config.anonKey.startsWith('eyJ') && /^[a-z]{20}$/.test(config.projectRef) && config.origin===location.origin && location.protocol==='https:';
@@ -19,9 +22,9 @@ $('#account-form').onsubmit=async event=>{
  try{
   const data=await call(mode,{username:values.username,password:values.password,invite:values.code,recoveryCode:values.code});
   event.target.reset();
-  if(data.token){token=data.token;const {user}=await call('session');$('#identity').textContent=user.username;$('#player').textContent=`Linked staging player: ${user.playerRef}`;$('#member').hidden=false;$('#account-form').hidden=true;$('nav').hidden=true;status('Signed in to staging.');}
+  if(data.token){token=data.token;const {user}=await call('session');$('#identity').textContent=user.username;$('#player').textContent=`Linked staging player: ${user.playerRef}`;$('#member').hidden=false;$('#account-form').hidden=true;$('nav').hidden=true;status('Signed in.');unmountBounty?.();unmountBounty=mountMemberBountyInput($('#bounty-input'),{...bountyConnection,getSession:()=>token});}
   else {$('#codes code').textContent=data.recoveryCodes[0];$('#codes').hidden=false;$('#account-form').hidden=true;$('nav').hidden=true;status('Password saved. Save your backup code before continuing.');}
  }catch(error){status(error.message);}finally{lock(false);}
 };
 $('#saved').onclick=()=>{$('#codes code').textContent='';$('#codes').hidden=true;$('#account-form').hidden=false;$('nav').hidden=false;setMode('login');status('Sign in with your new password.');};
-$('#logout').onclick=async()=>{try{await call('logout');token='';$('#member').hidden=true;$('#identity').textContent='';$('#player').textContent='';$('#account-form').hidden=false;$('nav').hidden=false;status('Signed out.');}catch(error){status(error.message);}};
+$('#logout').onclick=async()=>{try{await call('logout');token='';unmountBounty?.();$('#member').hidden=true;$('#identity').textContent='';$('#player').textContent='';$('#account-form').hidden=false;$('nav').hidden=false;status('Signed out.');}catch(error){status(error.message);}};
