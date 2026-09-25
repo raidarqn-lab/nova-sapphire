@@ -1,3 +1,4 @@
+import {eventIcon} from './event-icons.js';
 import {serverDate} from './train-clock.js';
 // Leadership-confirmed daily server-clock schedule.
 export const bloodNightHours=[2,10,18];
@@ -15,12 +16,12 @@ export function bloodNightVisible(){return true;}
 function format(date,lang,zone){return new Intl.DateTimeFormat(lang,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',...(zone?{timeZone:zone}:{timeZoneName:'short'})}).format(date);}
 export function bloodNightTicker(lang='en'){
  if(!bloodNightVisible())return '';const l=labels[lang]||labels.en;
- return `<span aria-hidden="true">🐺</span><strong>${l[0]}</strong><span>${l[1]} <b data-blood-count></b></span><span>${l[3]} · ${format(serverDate(nextBloodNight()),lang,'UTC')}</span>`;
+ return `${eventIcon('bloodNight')}<strong>${l[0]}</strong><span>${l[1]} <b data-blood-count></b></span><span>${l[3]} · ${format(serverDate(nextBloodNight()),lang,'UTC')}</span>`;
 }
 export function updateBloodNightCounts(){const s=remaining(),value=[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(n=>String(n).padStart(2,'0')).join(':');document.querySelectorAll('[data-blood-count]').forEach(el=>el.textContent=value);}
 export function mountBloodNight(lang='en',show=true){
  document.querySelector('#blood-night')?.remove();if(!show||!bloodNightVisible())return;
  const l=labels[lang]||labels.en,card=document.createElement('div');card.id='blood-night';card.dataset.start=nextBloodNight().toISOString();card.className='operation-summary';card.style.cssText='border-bottom:1px solid #365065;padding:4px 0 18px;margin-bottom:18px';
- card.innerHTML=`<strong><span aria-hidden="true">🐺</span> ${l[0]}</strong><span class="badge" style="color:#ffadc3">${l[1]} <b data-blood-count style="font-variant-numeric:tabular-nums"></b></span><small>${l[3]} · ${format(serverDate(nextBloodNight()),lang,'UTC')}</small><small>${l[4]} · ${format(nextBloodNight(),lang)}</small>`;
+ card.style.display='flex';card.style.alignItems='center';card.style.gap='16px';card.innerHTML=`${eventIcon('bloodNight')}<div style="display:grid;gap:7px"><strong>${l[0]}</strong><span class="badge" style="color:#86e8f3">${l[1]} <b data-blood-count style="font-variant-numeric:tabular-nums"></b></span><small>${l[3]} · ${format(serverDate(nextBloodNight()),lang,'UTC')}</small><small>${l[4]} · ${format(nextBloodNight(),lang)}</small></div>`;
  document.querySelector('[data-upcoming]')?.prepend(card);updateBloodNightCounts();
 }
