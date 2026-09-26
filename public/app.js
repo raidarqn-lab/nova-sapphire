@@ -1,4 +1,4 @@
-import {hubText,mountEventCatalog,mountChampions,setLeaderboardData} from './hub-pages.js';
+import {hubText,mountEventCatalog,mountChampions,setLeaderboardData} from './hub-pages.js?v=20260926d';
 import {mountBloodNight} from './blood-night.js?v=lineart-1';
 import {mountBounties,bountyLabel} from './bounties.js?v=20260926c';
 import {mountSeasonPlan} from './season-plan.js?v=event-icons-1';
@@ -6,7 +6,7 @@ import {mountTrainClock,weekKey,weekLabel,awaiting} from './train-clock.js';
 import {languages,dictionary} from './i18n.js';
 import {copy,events,players,tips} from './content.js';
 import {getMemberSession,loginMember,logoutMember} from './member-session.js';
-import {loadPublishedAllianceContent,loadMemberLeaderboards} from './member-content.js';
+import {loadPublishedAllianceContent,loadMemberLeaderboards} from './member-content.js?v=20260926d';
 const paths={home:'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',arrow:'M4 12h15m-5-5 5 5-5 5',train:'M6 16h12V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v11Zm0-7h12M8 20l-2 2m10-2 2 2M8 16v2h8v-2M9 12h.01M15 12h.01',trophy:'M8 3h8v7a4 4 0 0 1-8 0V3Zm0 2H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4m-4 2v6m-4 1h8',calendar:'M5 5h14v16H5V5Zm3-3v6m8-6v6M5 10h14m-10 4h2m3 0h2m-7 3h2',flag:'M5 22V3m0 1c5-4 9 4 15 0v10c-6 4-10-4-15 0',people:'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 10v-3a7 7 0 0 1 14 0v3M17 4a4 4 0 0 1 0 7m2 3a6 6 0 0 1 3 5v2',spark:'m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z',shield:'m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4Zm-4 10 3 3 5-6',gem:'m2 8 5-5h10l5 5-10 14L2 8Zm0 0h20M7 3l5 19 5-19',target:'M21 12a9 9 0 1 1-9-9m0 4a5 5 0 1 0 5 5m-5 0 10-10m-6 0v6h6',book:'M12 5c-4-3-7-2-10-1v16c4-1 7-1 10 1 3-2 6-2 10-1V4c-3-1-6-2-10 1Zm0 0v16',globe:'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM3 12h18M12 3c-5 5-5 13 0 18 5-5 5-13 0-18Z',lock:'M6 10h12v11H6V10Zm3 0V6a3 3 0 0 1 6 0v4m-3 5v2',swords:'m3 3 12 12m-2-5 5 5m-5 5 5-5m-9-4L3 3l7 2m11-2L9 15m2-5-5 5m5 5-5-5m9-4 6-8-7 2',pin:'m8 3 8 0-1 7 4 4H5l4-4-1-7Zm4 11v8',search:'M20 20l-5-5m2-6a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z',close:'m6 6 12 12M6 18 18 6',clock:'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-5v5l3 2',check:'m5 12 4 4L20 5'};
 const icon=name=>`<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name]||paths.spark}"/></svg>`;
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
