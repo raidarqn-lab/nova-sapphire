@@ -1,6 +1,6 @@
 import {hubText,mountEventCatalog,mountChampions,setLeaderboardData} from './hub-pages.js?v=20260926d';
 import {mountBloodNight} from './blood-night.js?v=lineart-1';
-import {mountBounties,bountyLabel} from './bounties.js?v=20260926weekly';
+import {mountBounties,bountyLabel} from './bounties.js?v=bounty-manager-20260927';
 import {mountSeasonPlan} from './season-plan.js?v=event-icons-1';
 import {mountTrainClock,weekKey,weekLabel,awaiting} from './train-clock.js';
 import {languages,dictionary} from './i18n.js';
