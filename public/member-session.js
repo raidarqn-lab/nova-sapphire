@@ -3,7 +3,7 @@ import {stagingAuth} from './staging-auth-config.js';
 const storageKey='nova-member-session-v1';
 
 export function getMemberSession(){
- try{return JSON.parse(sessionStorage.getItem(storageKey)||'null');}catch{return null;}
+ try{const session=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(session?.expiresAt&&Date.parse(session.expiresAt)<=Date.now()){sessionStorage.removeItem(storageKey);return null;}return session;}catch{return null;}
 }
 
 export const getMemberToken=()=>getMemberSession()?.token||'';
@@ -18,7 +18,7 @@ export async function loginMember(username,password){
  });
  const data=await response.json().catch(()=>({}));
  if(!response.ok||!data.token)throw Error('Unable to sign in. Check your username and password.');
- const session={token:data.token,username:data.username||username,playerName:data.playerName||data.player_name||'',signedInAt:Date.now()};
+ const session={token:data.token,accountId:data.user?.id||'',username:data.user?.username||data.username||username,playerName:data.user?.playerName||data.playerName||data.player_name||'',playerRef:data.user?.playerRef||'',signedInAt:Date.now()};
  try{sessionStorage.setItem(storageKey,JSON.stringify(session));}catch{}
  return session;
 }
