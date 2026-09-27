@@ -30,8 +30,9 @@ const labels={
 };
 export const bountyLabel=lang=>labels.bounties[langs.indexOf(lang)]||labels.bounties[0];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let week=weekKey(),day=null,type='all',onlyOpen=false,memberToken=getMemberToken(),unmountUpload;
+let week=weekKey(),day=null,type='all',onlyOpen=true,memberToken=getMemberToken(),unmountUpload;
 export function mountBounties(root,lang){
+ onlyOpen=true;
  const idx=Math.max(0,langs.indexOf(lang)),t=k=>labels[k]?.[idx]||k,tr=s=>lang==='en'?s:catalog[lang]?.[s]||s;
  const fmt=s=>s?new Date(s).toLocaleString(lang,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'UTC',hourCycle:'h23'})+' UTC':tr('Awaiting leadership');
  const windowTime=s=>s?`<strong>Server · ${esc(fmt(s))}</strong><small>Local · ${esc(new Date(s).toLocaleString(lang,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}))} · ${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</small>`:tr('Awaiting leadership');
