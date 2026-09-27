@@ -1,4 +1,4 @@
-import {announcementBanner,mountAnnouncementBanner} from './announcement-banner.js';
+import {announcementBanner,mountAnnouncementBanner} from './announcement-banner.js?v=hero-images-20260927';
 import {eventIcon} from './event-icons.js';
 import {hubText,mountEventCatalog,mountChampions,setLeaderboardData} from './hub-pages.js?v=20260926d';
 import {mountBloodNight} from './blood-night.js?v=lineart-1';
