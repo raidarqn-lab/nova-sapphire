@@ -1,4 +1,4 @@
-const submitStyles=document.createElement('link');submitStyles.rel='stylesheet';submitStyles.href=new URL('./bounty-submit.css?v=score-dates-20260927',import.meta.url);document.head.append(submitStyles);
+const submitStyles=document.createElement('link');submitStyles.rel='stylesheet';submitStyles.href=new URL('./bounty-submit.css?v=time-lines-20260927',import.meta.url);document.head.append(submitStyles);
 import {loadPublishedAllianceContent} from './member-content.js?v=bounty-manager-20260927';
 import {generateWeek,shift,themes} from './bounty-schedule.js?v=20260926weekly';
 import {weekKey} from './train-clock.js';
@@ -36,7 +36,7 @@ export function mountBounties(root,lang){
  onlyOpen=true;
  const idx=Math.max(0,langs.indexOf(lang)),t=k=>labels[k]?.[idx]||k,tr=s=>lang==='en'?s:catalog[lang]?.[s]||s;
  const fmt=s=>s?new Date(s).toLocaleString(lang,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'UTC',hourCycle:'h23'})+' UTC':tr('Awaiting leadership');
- const windowTime=s=>s?`<strong>Server time · ${esc(fmt(s))}</strong><small>Your time · ${esc(new Date(s).toLocaleString(lang,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}))} · ${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</small>`:tr('Awaiting leadership');
+ const windowTime=s=>s?`<span class="bh-window-time"><strong>Server time · ${esc(fmt(s))}</strong><small>Your time · ${esc(new Date(s).toLocaleString(lang,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}))} · ${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</small></span>`:tr('Awaiting leadership');
  let windows=new Map(),managed=[],settingsReady=!getMemberToken();
  function boardRows(w){const map=new Map(generateWeek(w).map(r=>[r.id,r]));for(const c of managed){const ref=c.payload.reference,stamp=ref.slice(-8);if(stamp<w.replaceAll('-','')||stamp>shift(w,6).replaceAll('-',''))continue;if(c.status!=='published'){map.delete(ref);continue;}map.set(ref,{...(map.get(ref)||{}),id:ref,type:ref.startsWith('DN')?'DN':'VS',title:c.title,customTitle:true,details:c.body,date:c.payload.gameDate,start:c.startsAt,end:c.endsAt,points:c.payload.points});}return [...map.values()].map(r=>{const w=windows.get(r.id);return w?{...r,end:w.endsAt||r.end,points:w.points??r.points,boosted:w.boosted,extended:w.extended&&!w.closed}:r;});}
  const open=r=>r.start&&Date.now()>=Date.parse(r.start)&&Date.now()<Date.parse(r.end);
