@@ -1,4 +1,4 @@
-import {announcementCopy} from './announcement-copy.js?v=title-case-20260928';
+import {announcementCopy} from './announcement-copy.js?v=blitz-20260928';
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fallbackImage=new URL('./assets/nova-transparent.png',import.meta.url).href;
 export const announcementImage=value=>{try{const url=new URL(value);return url.protocol==='https:'?url.href:'';}catch{return '';}};

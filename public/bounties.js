@@ -9,7 +9,7 @@ import {stagingAuth} from './staging-auth-config.js';
 import {getMemberToken} from './member-session.js';
 const langs=['en','fr','es','pt','vi','ko','de'];
 const labels={
- bounties:['Bounty Hunter','Chasseur de primes','Cazarrecompensas','Caçador de recompensas','Thợ săn nhiệm vụ','현상금 사냥꾼','Kopfgeldjäger'],
+ bounties:['Bounty Blitz','Bounty Blitz','Bounty Blitz','Bounty Blitz','Bounty Blitz','Bounty Blitz','Bounty Blitz'],
  intro:['Help Nova collect the full picture.','Aidez Nova à réunir toutes les informations.','Ayuda a Nova a reunir toda la información.','Ajude a Nova a reunir todas as informações.','Giúp Nova thu thập đầy đủ thông tin.','Nova가 전체 정보를 모을 수 있도록 도와주세요.','Hilf Nova, alle Informationen zu sammeln.'],
  demo:['Demo bounties · Submissions and points are simulated.','Primes démo · Envois et points simulés.','Recompensas de demo · Envíos y puntos simulados.','Recompensas de demonstração · Envios e pontos simulados.','Nhiệm vụ mẫu · Lượt gửi và điểm được mô phỏng.','데모 현상금 · 제출과 포인트는 모의입니다.','Demo-Aufträge · Einreichungen und Punkte sind simuliert.'],
  history:['My submissions','Mes envois','Mis envíos','Meus envios','Lượt gửi của tôi','내 제출 내역','Meine Einreichungen'],
