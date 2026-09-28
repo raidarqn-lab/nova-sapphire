@@ -102,3 +102,7 @@ body.clubhouse-active{background:#092e38;background-image:radial-gradient(ellips
 .clubhouse-home .section-header,.clubhouse-home .shop-home-header{flex-wrap:wrap}
 .clubhouse-home .quick-link strong,.clubhouse-home .quick-link small,.clubhouse-home .shop-home-item strong,.clubhouse-home .conductor-list strong,.clubhouse-home .conductor-list small{white-space:normal;overflow-wrap:anywhere;text-overflow:clip}
 .clubhouse-home .club-grid>*,.clubhouse-home .section-header h2{min-width:0}
+
+/* Native language menus need explicit contrasting option colors. */
+.header-tools #language{color-scheme:dark;color:#f4f8fc}
+.header-tools #language option,.header-tools #language optgroup{background-color:#123d47;color:#ffffff}
