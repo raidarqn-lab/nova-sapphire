@@ -1,0 +1,2 @@
+export const dataPending={en:'Data Pending',fr:'Données en attente',es:'Datos pendientes',pt:'Dados pendentes',vi:'Đang chờ dữ liệu',ko:'데이터 대기 중',de:'Daten ausstehend'};
+export function previousWeekPeriod(periods,metric,currentWeek){const d=new Date(currentWeek+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-7);const previous=d.toISOString().slice(0,10);return periods.find(p=>p.metric===metric&&p.periodType==='week'&&p.periodStart===previous);}
