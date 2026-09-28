@@ -27,7 +27,7 @@ let section=currentSection(),ranking='vs',filter='all',query='',user=null,csrf='
 let allianceMember=getMemberSession();
 let liveAllianceContent=[],liveContentLoaded=false;
 let liveLeaderboards={alliance:'NvSP',periods:[]};
-const t=k=>['guides','memos'].includes(k)?(announcementCopy[lang]||announcementCopy.en).announcements:k==='memoBrowse'?(announcementCopy[lang]||announcementCopy.en).intro:hubText(lang,k)||(k==='weekLabel'?weekLabel(lang):dictionary[lang][k]||k);
+const t=k=>k==='rankings'&&lang==='en'?'Hall of Fame':['guides','memos'].includes(k)?(announcementCopy[lang]||announcementCopy.en).announcements:k==='memoBrowse'?(announcementCopy[lang]||announcementCopy.en).intro:hubText(lang,k)||(k==='weekLabel'?weekLabel(lang):dictionary[lang][k]||k);
 const c=k=>copy[k]?.[lang]||'';
 const number=n=>new Intl.NumberFormat(lang).format(n);
 const compact=n=>new Intl.NumberFormat(lang,{notation:'compact',maximumFractionDigits:2}).format(n);
