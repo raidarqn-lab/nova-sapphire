@@ -72,5 +72,5 @@ modal.addEventListener('submit',async e=>{if(e.target.id!=='auth-form')return;e.
 window.addEventListener('hashchange',()=>{section=location.hash.slice(1)||'home';if(section==='captures'){section='events';render();document.querySelector('#captures')?.scrollIntoView({block:'center'});return}render();window.scrollTo(0,0)});
 document.addEventListener('nova:weekchange',render);
 render();
-async function refreshAllianceContent(){if(!allianceMember)return;const [content,scores]=await Promise.allSettled([loadPublishedAllianceContent(),loadMemberLeaderboards()]);if(content.status==='fulfilled'){liveAllianceContent=content.value;liveContentLoaded=true;}else liveContentLoaded=false;if(scores.status==='fulfilled')liveLeaderboards=scores.value;render();}
+async function refreshAllianceContent(){if(!allianceMember)return;await Promise.allSettled([loadPublishedAllianceContent().then(content=>{liveAllianceContent=content;liveContentLoaded=true;render();}).catch(()=>{liveContentLoaded=false;}),loadMemberLeaderboards().then(scores=>{liveLeaderboards=scores;render();})]);}
 if(allianceMember)refreshAllianceContent();
