@@ -1,4 +1,4 @@
-const pages={home:'index.html',events:'events.html',shop:'shop.html',rankings:'hall-of-fame.html',announcements:'announcements.html',bounties:'bounties.html',members:'members.html'};
+const pages={home:'index.html',events:'events.html',shop:'shop.html',storm:'desert-storm.html',rankings:'hall-of-fame.html',announcements:'announcements.html',bounties:'bounties.html',members:'members.html'};
 const aliases={guides:'announcements',captures:'events'};
 export function currentSection(){const hash=location.hash.slice(1);if(pages[hash]||aliases[hash])return aliases[hash]||hash;return Object.entries(pages).find(([,file])=>file===location.pathname.split('/').pop())?.[0]||'home';}
 export function sectionUrl(section){return new URL(pages[aliases[section]||section]||pages.home,new URL('.',location.href));}
