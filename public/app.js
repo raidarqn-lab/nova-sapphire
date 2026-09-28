@@ -1,4 +1,4 @@
-import {clubhouseWelcome,mountClubhouse} from './clubhouse.js?v=clubhouse-20260928';
+import {clubhouseWelcome,mountClubhouse} from './clubhouse.js?v=all-aboard-20260928';
 import {announcementCopy} from './announcement-copy.js?v=bounty-launch-20260928';
 import {previousWeekPeriod,dataPending} from './hall-of-fame.js?v=previous-week-20260928';
 import {shopMemberPage,shopHomeStrip} from './shop-member.js?v=shop-home-20260928';

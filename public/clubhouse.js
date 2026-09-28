@@ -14,5 +14,5 @@ export function mountClubhouse(lang){
  if(season)home.querySelector('[data-club-season]').append(season);
  if(clock)home.querySelector('[data-club-clock]').append(clock);
  if(note)home.querySelector('[data-club-clock]').append(note);
- const train=home.querySelector('.train-card');if(train)train.dataset.crewLabel=c[2];
+ const train=home.querySelector('.train-card');if(train)train.dataset.crewLabel=train.querySelector('.eyebrow')?.textContent.trim()||'All Aboard';
 }
