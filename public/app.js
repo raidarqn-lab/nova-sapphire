@@ -13,7 +13,7 @@ import {announcementBanner,mountAnnouncementBanner} from './announcement-banner.
 import {eventIcon} from './event-icons.js';
 import {hubText,mountEventCatalog,mountChampions,setLeaderboardData} from './hub-pages.js?v=20260926d';
 import {mountBloodNight} from './blood-night.js?v=lineart-1';
-import {mountBounties,bountyLabel} from './bounties.js?v=translation-fix-20260928';
+import {mountBounties,bountyLabel} from './bounties.js?v=reset-fix-20260928';
 import {mountSeasonPlan} from './season-plan.js?v=compact-season-20260927';
 import {mountTrainClock,weekKey,weekLabel,awaiting,serverDate} from './train-clock.js?v=translation-fix-20260928';
 import {languages,dictionary} from './i18n.js';
