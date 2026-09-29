@@ -1,10 +1,10 @@
 import {bountyText} from './bounty-live-copy.js?v=translation-fix-20260928';
-const submitStyles=document.createElement('link');submitStyles.rel='stylesheet';submitStyles.href=new URL('./bounty-submit.css?v=time-lines-20260927',import.meta.url);document.head.append(submitStyles);
+const submitStyles=document.createElement('link');submitStyles.rel='stylesheet';submitStyles.href=new URL('./bounty-submit.css?v=receipt-20260928',import.meta.url);document.head.append(submitStyles);
 import {loadPublishedAllianceContent} from './member-content.js?v=bounty-manager-20260927';
 import {generateWeek,shift,themes,serverFormat} from './bounty-schedule.js?v=reset-fix-20260928';
 import {weekKey} from './train-clock.js';
 import {catalog} from './bounty-copy.js';
-import {mountMemberBountyInput} from './member-bounty-input.js?v=translation-fix-20260928';
+import {mountMemberBountyInput} from './member-bounty-input.js?v=receipt-20260928';
 import {bountyConnection} from './nova-bounty-config.js';
 import {stagingAuth} from './staging-auth-config.js';
 import {getMemberToken} from './member-session.js';
