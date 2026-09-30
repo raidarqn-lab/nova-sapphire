@@ -1,4 +1,4 @@
-import {loginMember} from './member-session.js';
+import {loginMember} from './member-session.js?v=unified-login-20260929';
 import {stagingAuth as config} from './staging-auth-config.js';
 const $=s=>document.querySelector(s);
 const enabled=config.enabled && typeof config.anonKey==='string' && config.anonKey.startsWith('eyJ') && /^[a-z]{20}$/.test(config.projectRef) && [config.origin,'https://nova.join1616.com'].includes(location.origin) && location.protocol==='https:';
@@ -20,16 +20,16 @@ async function call(action,body={}){
 }
 $('#account-form').onsubmit=async event=>{
  event.preventDefault();const values=Object.fromEntries(new FormData(event.target));
- lock(true);status('Working…');
+ lock(true);status(mode==='login'?'Signing in…':'Saving your new password…');
  try{
-  if(mode==='login'){await loginMember(values.username.trim(),values.password);event.target.reset();location.replace('./index.html');return;}
+  if(mode==='login'){await loginMember(values.username.trim(),values.password);event.target.reset();const requested=new URLSearchParams(location.search).get('returnTo');let target=new URL('./index.html',location.href);try{const next=new URL(requested||'./index.html',location.href);if(next.origin===location.origin&&/\/(index|events|shop|desert-storm|hall-of-fame|announcements|bounties|members)\.html$/.test(next.pathname))target=next;}catch{}location.replace(target.href);return;}
   const action=mode==='recover'?$('#code-kind').value:'register';
   const code=values.code.trim().toLowerCase();
   if(!/^[a-f0-9]{64}$/.test(code))throw Error('Paste the complete 64-character code. Do not include a link or surrounding text.');
   const data=await call(action,{username:values.username.trim(),password:values.password,invite:code,recoveryCode:code});
   event.target.reset();
   $('#codes code').textContent=data.recoveryCodes[0];$('#codes').hidden=false;$('#account-form').hidden=true;$('nav').hidden=true;status('Password saved. Save your backup code before continuing.');
- }catch(error){status(error instanceof TypeError?'Unable to reach member sign-in. Check your connection and try again.':error.message);}finally{lock(false);}
+ }catch(error){status(error.name==='TimeoutError'||error.name==='AbortError'?'Sign-in took too long. Please try again. If this continues, contact leadership.':error instanceof TypeError?'Unable to reach member sign-in. Check your connection and try again.':error.message);}finally{lock(false);}
 };
 $('#saved').onclick=()=>{$('#codes code').textContent='';$('#codes').hidden=true;$('#account-form').hidden=false;$('nav').hidden=false;setMode('login');status('Sign in with your new password.');};
 
