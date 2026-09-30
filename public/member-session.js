@@ -14,15 +14,16 @@ export async function loginMember(username,password){
   method:'POST',
   headers:{'Content-Type':'application/json',apikey:stagingAuth.anonKey,Authorization:`Bearer ${stagingAuth.anonKey}`},
   body:JSON.stringify({action:'login',username,password}),
-  signal:AbortSignal.timeout(20000)
+  signal:AbortSignal.timeout(12000)
  });
  const data=await response.json().catch(()=>({}));
- if(!response.ok||!data.token)throw Error('Unable to sign in. Check your username and password.');
+ if(!response.ok||!data.token)throw Error(response.status===429?'Too many sign-in attempts. Wait ten minutes before trying again.':response.status>=500?'Member sign-in is temporarily unavailable. Please try again shortly.':'Unable to sign in. Check your username and password, or use Reset my password.');
  const session={token:data.token,accountId:data.user?.id||'',username:data.user?.username||data.username||username,playerName:data.user?.playerName||data.playerName||data.player_name||'',playerRef:data.user?.playerRef||'',signedInAt:Date.now()};
- try{sessionStorage.setItem(storageKey,JSON.stringify(session));}catch{}
+ try{sessionStorage.setItem(storageKey,JSON.stringify(session));}catch{throw Error('Your browser could not save the sign-in session. Allow website storage, then try again.');}
  return session;
 }
 
 export function logoutMember(){
  try{sessionStorage.removeItem(storageKey);}catch{}
 }
+
