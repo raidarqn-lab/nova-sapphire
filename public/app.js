@@ -81,6 +81,7 @@ window.addEventListener('hashchange',()=>{section=currentSection();if(section===
 document.addEventListener('nova:weekchange',render);
 mountMemberRoutes(next=>{section=next;render();window.scrollTo(0,0);});
 render();
-async function refreshAllianceContent(){if(!allianceMember)return;await Promise.allSettled([loadPublishedAllianceContent().then(content=>{liveAllianceContent=content;liveContentLoaded=true;render();}).catch(()=>{liveContentLoaded=false;}),loadMemberLeaderboards().then(scores=>{liveLeaderboards=scores;render();})]);}
+async function refreshAllianceContent(){if(!allianceMember)return;await Promise.allSettled([loadPublishedAllianceContent().then(content=>{liveAllianceContent=content;liveContentLoaded=true;if(section!=='bounties')render();}).catch(()=>{liveContentLoaded=false;}),loadMemberLeaderboards().then(scores=>{liveLeaderboards=scores;if(section!=='bounties')render();})]);}
 if(allianceMember)refreshAllianceContent();
+
 
