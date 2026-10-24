@@ -1,5 +1,5 @@
 import {translatePublished as tp} from './published-copy.js?v=20260928';
-import {getMemberToken} from './member-session.js';
+import {getMemberToken} from './member-session.js?v=manual-20261023';
 import {bountyConnection} from './nova-bounty-config.js';
 // Reset follows Pacific wall time, including daylight saving changes.
 export function serverDate(now = new Date()) {

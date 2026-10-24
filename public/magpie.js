@@ -1,4 +1,4 @@
-import {getMemberToken} from './member-session.js';
+import {getMemberToken} from './member-session.js?v=manual-20261023';
 import {bountyConnection} from './nova-bounty-config.js';
 const copy={
  en:['Your daily companion','The Magpie Nest','A little snack. A happier magpie.','Feed your magpie','Fed for today','Play together','Your magpie is happy and fed.','Your magpie is ready for a snack.','5 Bounty Blitz points · once per server day','You can play and feed. Your account earns no points.','Feeding…','Loading your nest…','Try again','Feeding history','Server day','Points','Feeding streak','days','Feeding points earned','Next feed · your time','Your magpie is waiting for its first snack.','Saved! Your 5 Bounty Blitz points are recorded.','Feeding saved. No points awarded to your account.','Already fed today. Come back after reset.','Could not reach your nest. Please try again.','Chirp! That was fun.','Recent 14 feeding days','Daily feeding rewards'],
