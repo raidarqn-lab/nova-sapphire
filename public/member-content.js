@@ -1,4 +1,4 @@
-import {getMemberToken} from './member-session.js';
+import {getMemberToken} from './member-session.js?v=manual-20261023';
 import {bountyConnection} from './nova-bounty-config.js';
 
 const contentRequests=new Map();
